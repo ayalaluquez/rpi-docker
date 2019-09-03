@@ -136,7 +136,8 @@ Ahora configuramo el nginx para que sirva el sitio con https. Primero, detener e
 	$ docker-compose stop nginx
 
 Agrega el archivo de configuración del archivo para el puerto 443 en el docker-compose.yml 
-```nginx:
+```
+nginx:
  depends_on:
 ..
 ..
@@ -146,8 +147,11 @@ Agrega el archivo de configuración del archivo para el puerto 443 en el docker-
 ..
 ```
 Y para que no se reinicie todos lo contenedores y que no afecte las dependencias.
+	
 	$ docker-compose up --force-recreate --no-deps nginx
-        ó la vieja confiable xD
+ 
+ ó la vieja confiable xD
+
 	$ docker-compose up -d
 
 
