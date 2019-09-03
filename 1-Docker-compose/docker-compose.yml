@@ -1,0 +1,74 @@
+version: '3.1'
+services:
+ mysql:
+  image: hypriot/rpi-mysql
+  container_name: mysql
+  restart: unless-stopped
+  env_file: .env
+  environment:
+   - MYSQL_DATABASE=majes
+  volumes: 
+   - rpi-mysql:/var/lib/mysql
+  networks:
+   - reddocker
+   - reddb
+
+ wordpress:
+  depends_on:
+   - mysql
+  image: wordpress:5.2.2-fpm-alpine
+  container_name: wordpress
+  restart: unless-stopped
+  env_file: .env
+  environment:
+   - WORDPRESS_DB_HOST=mysql:3306
+   - WORDPRESS_DB_USER=$MYSQL_USER
+   - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+   - WORDPRESS_DB_NAME=majes
+  volumes:
+   - web:/var/www/html
+  networks:
+   - reddocker
+   - reddb
+
+ nginx:
+  depends_on:
+   - wordpress
+  image: nginx:1.17.3-alpine
+  container_name: nginx
+  restart: unless-stopped
+  ports:
+   - "80:80"
+   - "443:443"
+  volumes:
+   - web:/var/www/html
+   - nginx:/etc/nginx
+   - ./maje-https.conf:/etc/nginx/conf.d/maje.conf
+   - certificado:/etc/letsencrypt
+   - ./options-ssl-nginx.conf:/etc/nginx/conf.d/options-ssl-nginx.conf
+  networks:
+   - reddocker
+
+ certificado:
+   depends_on:
+    - nginx
+   image: thrynir/certbot
+   container_name: certificado
+   volumes:
+    - certificado:/etc/letsencrypt
+    - ssl:/var/lib/letsencrypt
+    - web:/var/www/html
+   command: certonly --webroot --webroot-path=/var/www/html --email tetrix@riseup.net --agree-tos --no-eff-email --force-renewal -d maje.duckdns.org -d www.maje.duckdns.org
+
+volumes:
+ certificado:
+ ssl:
+ web:
+ rpi-mysql:
+ nginx:
+
+networks:
+ reddocker:
+  driver: bridge  
+ reddb:
+  driver: bridge
