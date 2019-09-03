@@ -10,7 +10,6 @@ services:
   volumes: 
    - rpi-mysql:/var/lib/mysql
   networks:
-   - reddocker
    - reddb
 
  wordpress:
