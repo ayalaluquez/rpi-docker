@@ -12,7 +12,17 @@ Prerrequisitos:
 
 Primero se utiliza el archivo maje.conf con la configurción del puerto 80, esto permitirá utilizar certbot para obtener el certificado. Una vez que haya obtenido el certificado incluiremos la configuración de nginx para servir el sitio al puerto 443 de 'maje-https.conf'. 
 
-
+La configuración del servicio nginx en docker-compose.yml deber ser mas o menos asi:
+```
+nginx:
+ depends_on:
+..
+..
+ volumes:
+./maje.conf:/etc/nginx/conf.d/maje.conf  ===> Modificá esta linea para hacer referencia al archivo de configuración sin el SSL. 
+..
+..
+```
 ### Sobre la configuración Nginx:
 
 	location ~ /.well-known/acme-challenge 
@@ -27,16 +37,17 @@ Primero se utiliza el archivo maje.conf con la configurción del puerto 80, esto
 	location ~* \.(css|gif|ico|jpeg|jpg|js|png)$
 	garantiza que estos tipos de archivos sean almacenables en cache.
 
-(opcional) 
+_(opcional)
+
 	server_tokens off; Para ocultar la versión de nginx en la página de error
 
-	add_header configuración de seguridad para el encabezado del sitio 
-	X-Frame-Options "SAMEORIGIN"; Evitar ataques Clickjacking
-	X-XSS-Protection "1; mode=block"; Proteje de ataque XSS
-        X-Content-Type-Options "nosniff"; Protección de detección de contenido por de rastreo MIME
-	Content-Security-Policy "default-src"; Agregar una lista de blanca de cosos que sitio puede ejecutar
-        Strict-Transport-Security; Toda la comunicación se envia a través de https  
-	# enable strict transport security only if you understand the implications
+	Los add_header configuración de seguridad para el encabezado del sitio 
+	
+	 X-Frame-Options "SAMEORIGIN"; Evitar ataques Clickjacking
+	 X-XSS-Protection "1; mode=block"; Proteje de ataque XSS
+	 x-Content-Type-Options "nosniff"; Protección de detección de contenido por de rastreo MIME
+	 Content-Security-Policy "default-src"; Agregar una lista de blanca de cosos que sitio puede ejecutar
+         Strict-Transport-Security; Toda la comunicación se envia a través de https  
 
 ## Sobre Docker compose
 
@@ -78,23 +89,26 @@ Primero se utiliza el archivo maje.conf con la configurción del puerto 80, esto
 ###### La salida de cerbot debe ser 0
 
 	$ docker-compose ps
- Name                Command               State                     Ports                  
---------------------------------------------------------------------------------------------
-certbot   certbot certonly --webroot ...   Exit 1                                           
-db        docker-entrypoint.sh --def ...   Up       3306/tcp, 33060/tcp                     
-web       nginx -g daemon off;             Up       0.0.0.0:443->443/tcp, 0.0.0.0:80->80/tcp
-wp        docker-entrypoint.sh php-fpm     Up       9000/tcp   
+ 	
+	Name                Command               State                     Ports                  
+	--------------------------------------------------------------------------------------------
+	certbot   certbot certonly --webroot ...   Exit 1                                           
+	db        docker-entrypoint.sh --def ...   Up       3306/tcp, 33060/tcp                     
+	web       nginx -g daemon off;             Up       0.0.0.0:443->443/tcp, 0.0.0.0:80->80/tcp
+	wp        docker-entrypoint.sh php-fpm     Up       9000/tcp   
+
 
 Si devuelve un valor diferente a 0, es por que algo no salió bien. Y.. verifica
 
 	$ docker-compose logs certbot
-``Attaching to certbot
-certbot    | Saving debug log to /var/log/letsencrypt/letsencrypt.log
-certbot    | Plugins selected: Authenticator webroot, Installer None
-certbot    | Renewing an existing certificate
-certbot    | An unexpected error occurred:
-certbot    | There were too many requests of a given type :: Error creating new order :: too many certificates already issued for exact set of domains: rosalia.pytrix.me,www.rosalia.pytrix.me: see https://letsencrypt.org/docs/rate-limits/
-certbot    | Please see the logfiles in /var/log/letsencrypt for more details.``
+	
+	Attaching to certbot
+	certbot    | Saving debug log to /var/log/letsencrypt/letsencrypt.log
+	certbot    | Plugins selected: Authenticator webroot, Installer None
+	certbot    | Renewing an existing certificate
+	certbot    | An unexpected error occurred:
+	certbot    | There were too many requests of a given type :: Error creating new order :: too many certificates already issued for exact set of domains: rosalia.pytrix.me,www.rosalia.pytrix.me: see https://letsencrypt.org/docs/rate-limits/
+	certbot    | Please see the logfiles in /var/log/letsencrypt for more details.
 
 En este caso, como se ha realizado muchas solicitudes, letsencrypt baneeo las solicitudes, con la opción --staging es posible evadir esos limites de solicitudes.
 
@@ -116,22 +130,24 @@ Verifica que el certificado se creo en la carpeta /etc/lesencrypt/live y que el 
 	
 	$ docker-compose exec nginx ls -la /etc/letsencrypt/live
 	ó
+	
 	$ docker exec nginx ls -la /etc/letsencrypt/live
 
-```total 16
-drwx------    3 root     root          4096 Sep  2 00:19 .
-drwxr-xr-x    9 root     root          4096 Sep  3 17:59 ..
--rw-r--r--    1 root     root           740 Sep  2 00:19 README
-drwxr-xr-x    2 root     root          4096 Sep  3 17:59 maje.duckdns.org```
+	total 16
+	drwx------    3 root     root          4096 Sep  2 00:19 .
+	drwxr-xr-x    9 root     root          4096 Sep  3 17:59 ..
+	-rw-r--r--    1 root     root           740 Sep  2 00:19 README
+	drwxr-xr-x    2 root     root          4096 Sep  3 17:59 maje.duckdns.org
 	
-
+	
 Ahora configuramo el nginx para que sirva el sitio con https. Primero, detener el contenedor nginx
         
 
 	$ docker-compose stop nginx
 
 Agrega el archivo de configuración del archivo para el puerto 443 en el docker-compose.yml 
-```nginx:
+```
+nginx:
  depends_on:
 ..
 ..
@@ -141,8 +157,11 @@ Agrega el archivo de configuración del archivo para el puerto 443 en el docker-
 ..
 ```
 Y para que no se reinicie todos lo contenedores y que no afecte las dependencias.
+	
 	$ docker-compose up --force-recreate --no-deps nginx
-        ó la vieja confiable xD
+ 
+ ó la vieja confiable xD
+
 	$ docker-compose up -d
 
 
