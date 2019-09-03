@@ -12,7 +12,17 @@ Prerrequisitos:
 
 Primero se utiliza el archivo maje.conf con la configurción del puerto 80, esto permitirá utilizar certbot para obtener el certificado. Una vez que haya obtenido el certificado incluiremos la configuración de nginx para servir el sitio al puerto 443 de 'maje-https.conf'. 
 
-
+primero la configuración del servicio nginx en docker-compose.yml deber ser mas o menos asi:
+```
+nginx:
+ depends_on:
+..
+..
+ volumes:
+./maje.conf:/etc/nginx/conf.d/maje.conf  ====> haciendo referencia al archivo de configuración sin el SSL. 
+..
+..
+```
 ### Sobre la configuración Nginx:
 
 	location ~ /.well-known/acme-challenge 
