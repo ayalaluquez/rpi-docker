@@ -11,22 +11,29 @@ Y eso seria todo!, docker build ejecuta cada instrucción del Dockerfile (FROM, 
 	$ docker run --name nombreContenedor -p 80:80 -d nombreImagen
 
 * Listar todos los contenedores 
-	$ docker ps -a
+
+		$ docker ps -a
 
 * Listar todas las imagenes locales
-	$ docker images
+		
+		$ docker images
 
 * Revisar los logs en un contendor
-	$ docker logs nombreContenedor
+	
+		$ docker logs nombreContenedor
  
 * Eliminar contenedor
- 	$ docker rm -f nombreContenedor
+ 	
+		$ docker rm -f nombreContenedor
 
 * Eliminar imagen
-	$ docker rmi nombreImagen
+		
+		$ docker rmi nombreImagen
 
 * Inicar, detener y eliminar todos los contenedores
-	$ docker start|stop|rm $(docker ps -a -q)
+	
+		$ docker start|stop|rm $(docker ps -a -q)
 
 * Eliminar todas las imagenes
-	$ docker rmi $(docker images -q)
+		
+		$ docker rmi $(docker images -q)
