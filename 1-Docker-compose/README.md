@@ -27,7 +27,7 @@ Primero se utiliza el archivo maje.conf con la configurción del puerto 80, esto
 	location ~* \.(css|gif|ico|jpeg|jpg|js|png)$
 	garantiza que estos tipos de archivos sean almacenables en cache.
 
-_(opcional) 
+_(opcional)
 
 	server_tokens off; Para ocultar la versión de nginx en la página de error
 
@@ -35,7 +35,7 @@ _(opcional)
 	
 	 X-Frame-Options "SAMEORIGIN"; Evitar ataques Clickjacking
 	 X-XSS-Protection "1; mode=block"; Proteje de ataque XSS
-         X-Content-Type-Options "nosniff"; Protección de detección de contenido por de rastreo MIME
+	 x-Content-Type-Options "nosniff"; Protección de detección de contenido por de rastreo MIME
 	 Content-Security-Policy "default-src"; Agregar una lista de blanca de cosos que sitio puede ejecutar
          Strict-Transport-Security; Toda la comunicación se envia a través de https  
 
