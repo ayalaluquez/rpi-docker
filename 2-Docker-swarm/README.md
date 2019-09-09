@@ -47,9 +47,9 @@ Jugando un poco con orquestación de contenedores en la nube ^.^
 		--google-project <Project-ID>
 
 Opciones
-* --google-machine-type n1-standard-1: crea un instancia con 1 vCPU y 3,75 GB de memoria.
-* --google-project: google ID proyecto, con el siguiente comando se puede obtener esa info  $ gcloud config get-value project 
-* --google-tags: es importante utilizar los tags para configuraciones de firewalls ;)
+* **--google-machine-type n1-standard-1**: crea un instancia con 1 vCPU y 3,75 GB de memoria.
+* **--google-project**: ID del proyecto de google, el siguiente comando devuelve esa info  `$ gcloud config get-value project` 
+* **--google-tags**: es importante utilizar los tags para configuraciones de firewalls en gcloud ;)
 
 ##### Listar instancia Google Cloud
 
