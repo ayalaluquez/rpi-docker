@@ -39,12 +39,12 @@ Jugando un poco con orquestación de contenedores en la nube ^.^
 
 	$ docker-machine create manager \
 		--engine-install-url experimental.docker.com \
-    		-d google \
-    		--google-machine-type n1-standard-1 \
-    		--google-zone southamerica-east1-a \
-    		--google-disk-size "20" \
-    		--google-tags swarm \
-    		--google-project <Project-ID>
+		-d google \
+		--google-machine-type n1-standard-1 \
+		--google-zone southamerica-east1-a \
+		--google-disk-size "20" \
+		--google-tags swarm \
+		--google-project <Project-ID>
 
 Opciones
 * --google-machine-type n1-standard-1: crea un instancia con 1 vCPU y 3,75 GB de memoria.
