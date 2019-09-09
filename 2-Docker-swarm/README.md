@@ -63,7 +63,7 @@ Generar token
 
 `$ eval $(docker-machine env swarm-manager)`
 
-* eval es un comando que se ejecuta como comando una variable, en este caso las variables del cliente de docker "swarm-manager".
+* eval es un comando que permite ejecutar un comando con variables de entorno, en este caso las variables del cliente de docker "swarm-manager".
 
 `$ docker swarm init` 
 		
