@@ -2,17 +2,17 @@
 
 Jugando un poco con orquestación de contenedores en la nube ^.^  
 
-Prerequsitos
+### Prerequsitos
 
 * [Docker](https://docs.docker.com/install/)
 * [Docker-machine](https://docs.docker.com/machine/install-machine/)
 * [SDK Cloud](https://cloud.google.com/sdk/docs/quickstart-debian-ubuntu) 
 
-Es necesario iniciar sesión 
+### Iniciar sesión con una cuenta de google 
 
 `$ gcloud init`
 
-Comando principales de google cloud
+#### Comando principales de google cloud
 	
 `$ gcloud auth list` 	=> muestra una lista de cuentas guardadas localmente
 
@@ -24,11 +24,11 @@ Comando principales de google cloud
 
 [Más comando](https://cloud.google.com/sdk/gcloud/reference/)
 
-Configuración de credenciales para gcloud
+### Configuración de credenciales para gcloud
 
 [Crear clave de cuenta de servicio y generar archivo JSON](https://console.cloud.google.com/apis/credentials/serviceaccountkey?hl=es)
 
-Crear variable de entorno 
+#### Crear variable de entorno 
 	
 `$ export GOOGLE_APPLICATION_CREDENTIALS="/Dir/donde/hayas/descargado/archivo.json"`
 
@@ -51,7 +51,7 @@ Opciones
 * --google-project: google ID proyecto, con el siguiente comando se puede obtener esa info  $ gcloud config get-value project 
 * --google-tags: es importante utilizar los tags para configuraciones de firewalls ;)
 
-### Listar instancia Google Cloud
+##### Listar instancia Google Cloud
 
 `$ gcloud compute instances list`                                                                                                         
 	
@@ -59,7 +59,7 @@ Opciones
 	swarm-manager  southamerica-east1-a  n1-standard-1               10.158.0.5   35.xx.xx.xx    RUNNING
 
 
-Generar token
+### Generar token
 
 `$ eval $(docker-machine env swarm-manager)`
 
@@ -71,7 +71,7 @@ Generar token
 	docker swarm join --token SWMTKN-1-2iz51xqg59ep62z8hnbahljw0qbk8rlbwkv6xff5dbkfroj3uo-dew5gnpd9sitcalxmx0t8vpbt 10.158.0.5:2377
 	...
 
-Creando otra instancia 
+### Crear otra instancia/nodo 
 
 	$ docker-machine create swarm-worker-1 \   
         	--engine-install-url experimental.docker.com \
@@ -82,15 +82,15 @@ Creando otra instancia
         	--google-tags swarm \
         	--google-project <Project-ID>`
 
-Se creo otra instancia llamadas swarm-worker-2
+Y otro instancia llamadas swarm-worker-2 ... y las que quieras...
 
-Cambiar las variables de entorno para hacer el join a la instancia manager.
+### Cambiar las variables de entorno para hacer el join a la instancia manager.
 `$ eval $(docker-machine env swarm-worker-1)`
 
 `$ docker swarm join --token SWMTKN-1-2iz51xqg59ep62z8hnbahljw0qbk8rlbwkv6xff5dbkfroj3uo-dew5gnpd9sitcalxmx0t8vpbt 10.158.0.5:2377`
 
 
-Volver a cambiar las variables para ver los nodos xD
+### Volver a cambiar las variables para ver los nodos xD
 `$ eval $(docker-machine env swarm-manager)`
 
 `$ docker node ls` 
