@@ -30,7 +30,7 @@ Jugando un poco con orquestación de contenedores en la nube ^.^
 
 #### Crear variable de entorno 
 	
-`$ export GOOGLE_APPLICATION_CREDENTIALS="/Dir/donde/hayas/descargado/archivo.json"`
+`$ export GOOGLE_APPLICATION_CREDENTIALS=/Dir/donde/hayas/descargado/archivo.json`
 
 [Más info sobre autenticación](https://cloud.google.com/docs/authentication/production?hl=es)
 
