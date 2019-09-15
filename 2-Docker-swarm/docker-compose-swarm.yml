@@ -1,0 +1,92 @@
+version: '3.7'
+services:
+  db:
+    image: mysql:8.0.17
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == worker
+    environment: 
+      - WORDPRESS_DB_NAME=swarm
+        # networks:
+            # - reddocker
+        # - reddb
+
+  wordpress:
+    image: wordpress:5.2.2-fpm-alpine
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == worker
+    depends_on:
+      - db
+    env_file: .env
+    environment:
+      - WORDPRESS_DB_HOST=mysql:3306
+      - WORDPRESS_DB_USER=$MYSQL_USER
+      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_NAME=majes
+    volumes:
+      - web:/var/www/html
+        #networks:
+            #- reddocker
+        # - reddb
+
+  nginx:
+    image: nginx:1.17.3-alpine
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+    depends_on:
+      - wordpress
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - web:/var/www/html
+      - nginx:/etc/nginx
+      - ./swarm.conf:/etc/nginx/conf.d/swarm.conf
+      - certificado:/etc/letsencrypt
+      - ./options-ssl-nginx.conf:/etc/nginx/conf.d/options-ssl-nginx.conf
+        #networks:
+            #     - reddocker
+
+  certificado:
+    depends_on:
+      - nginx
+    image: certbot/certbot
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+    volumes:
+      - certificado:/etc/letsencrypt
+      - ssl:/var/lib/letsencrypt
+      - web:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email tetrix@riseup.net --agree-tos --no-eff-email --force-renewal -d swarm.pytrix.me -d www.swarm.pytrix.me
+
+volumes:
+  certificado:
+  ssl:
+  web:
+  rpi-mysql:
+  nginx:
+
+          #networks:
+          # reddocker:
+          #  driver: bridge
+          #reddb:
+          #driver: bridge
