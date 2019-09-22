@@ -34,7 +34,7 @@ services:
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
       - WORDPRESS_DB_NAME=swarm
     volumes:
-      - web:/var/www/html
+      - web:/usr/share/nginx/html
         #networks:
             #- reddocker
         # - reddb
@@ -54,7 +54,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - web:/var/www/html
+      - web:/usr/share/nginx/html
       - nginx:/etc/nginx
       - ./swarm.conf:/etc/nginx/conf.d/swarm.conf
       - certificado:/etc/letsencrypt
@@ -76,8 +76,8 @@ services:
         #volumes:
         #- certificado:/etc/letsencrypt
         #- ssl:/var/lib/letsencrypt
-        #- web:/var/www/html
-        #command: certonly --webroot --webroot-path=/var/www/html --email tetrix@riseup.net --agree-tos --no-eff-email --force-renewal -d swarm.pytrix.me -d www.swarm.pytrix.me
+        #- web:/usr/share/nginx/html
+        #command: certonly --webroot --webroot-path=/usr/share/nginx/html --email tetrix@riseup.net --agree-tos --no-eff-email --force-renewal -d swarm.pytrix.me -d www.swarm.pytrix.me
 
 volumes:
   certificado:
