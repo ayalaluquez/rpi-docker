@@ -12,8 +12,8 @@ services:
     env_file: .env
     environment:
       - MYSQL_DATABASE=swarm
-            # networks:
-            # - reddocker
+    networks:
+      - reddocker
         # - reddb
 
   wordpress:
@@ -35,8 +35,8 @@ services:
       - WORDPRESS_DB_NAME=swarm
     volumes:
       - web:/usr/share/nginx/html
-        #networks:
-            #- reddocker
+    networks:
+      - reddocker
         # - reddb
 
   nginx:
@@ -59,8 +59,8 @@ services:
       - ./swarm.conf:/etc/nginx/conf.d/swarm.conf
       - certificado:/etc/letsencrypt
       - ./options-ssl-nginx.conf:/etc/nginx/conf.d/options-ssl-nginx.conf
-        #networks:
-            #     - reddocker
+    networks:
+      - reddocker
 
         #  certificado:
         #depends_on:
@@ -86,8 +86,8 @@ volumes:
   rpi-mysql:
   nginx:
 
-          #networks:
-          # reddocker:
-          #  driver: bridge
+networks:
+  reddocker:
+    driver: overlay
           #reddb:
           #driver: bridge
