@@ -19,12 +19,12 @@ services:
   wordpress:
     image: wordpress:5.2.2-fpm-alpine
     deploy:
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
       placement:
         constraints:
-          - node.role == worker
+          - node.role == manager
     depends_on:
       - db
     env_file: .env
