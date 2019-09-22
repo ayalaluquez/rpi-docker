@@ -56,7 +56,7 @@ services:
     volumes:
       - web:/var/www/html
       - nginx:/etc/nginx
-      - ./swarm.conf:/etc/nginx/conf.d/swarm.conf
+      - ./swarm.conf:/etc/nginx/conf.d/default.conf
       - certificado:/etc/letsencrypt
       - ./options-ssl-nginx.conf:/etc/nginx/conf.d/options-ssl-nginx.conf
         #networks:
