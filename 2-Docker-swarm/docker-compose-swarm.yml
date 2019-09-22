@@ -10,8 +10,8 @@ services:
         constraints:
           - node.role == worker
     env_file: .env
-      environment:
-          - MYSQL_DATABASE=majes
+    environment:
+      - MYSQL_DATABASE=majes
             # networks:
             # - reddocker
         # - reddb
