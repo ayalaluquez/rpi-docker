@@ -1,4 +1,4 @@
-export GOOGLE_APPLICATION_CREDENTIALS=/home/blanca/Descargas/tetrix-2459a6f7b695.json
+export GOOGLE_APPLICATION_CREDENTIALS=~/Descargas/tetrix-2459a6f7b695.json
 
 for i in "manager" "worker"; do
 docker-machine create $i --engine-install-url "https://get.docker.com" \
