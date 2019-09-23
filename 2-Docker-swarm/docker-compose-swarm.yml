@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   db:
-    image: mysql:8.0.17
+    image: mysql:latest
     deploy:
       replicas: 1
       restart_policy:
@@ -9,12 +9,17 @@ services:
       placement:
         constraints:
           - node.role == worker
-    env_file: .env
     environment:
       - MYSQL_DATABASE=swarm
+      - MYSQL_ROOT_PASSWORD=EYmnKf62B2ULwbEQuLL3
+      - MYSQL_USER=nica
+      - MYSQL_PASSWORD=EA43VfjN5JuDvj3do1Dm
+    volumes: 
+      - database:/var/lib/mysql
+    command: '--default-authentication-plugin=mysql_native_password'
     networks:
       - reddocker
-        # - reddb
+        #- reddb
 
   wordpress:
     image: wordpress:5.2.2-fpm-alpine
@@ -24,17 +29,16 @@ services:
         condition: on-failure
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
     depends_on:
       - db
-    env_file: .env
     environment:
-      - WORDPRESS_DB_HOST=mysql:3306
-      - WORDPRESS_DB_USER=$MYSQL_USER
-      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=nica
+      - WORDPRESS_DB_PASSWORD=EA43VfjN5JuDvj3do1Dm
       - WORDPRESS_DB_NAME=swarm
     volumes:
-      - web:/usr/share/nginx/html
+      - web:/var/www/html
     networks:
       - reddocker
         # - reddb
@@ -54,40 +58,39 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - web:/usr/share/nginx/html
+      - web:/var/www/html
       - nginx:/etc/nginx
-      - ./swarm.conf:/etc/nginx/conf.d/swarm.conf
+      - ./swarm.conf:/etc/nginx/conf.d/default.conf
       - certificado:/etc/letsencrypt
       - ./options-ssl-nginx.conf:/etc/nginx/conf.d/options-ssl-nginx.conf
     networks:
       - reddocker
 
-        #  certificado:
-        #depends_on:
-        #- nginx
-        #image: certbot/certbot
-        #deploy:
-        #replicas: 1
-        #restart_policy:
-        #condition: on-failure
-        #placement:
-        #constraints:
-        # - node.role == manager
-        #volumes:
-        #- certificado:/etc/letsencrypt
-        #- ssl:/var/lib/letsencrypt
-        #- web:/usr/share/nginx/html
-        #command: certonly --webroot --webroot-path=/usr/share/nginx/html --email tetrix@riseup.net --agree-tos --no-eff-email --force-renewal -d swarm.pytrix.me -d www.swarm.pytrix.me
-
+  htpps:
+    image: certbot/certbot
+    deploy:
+      replicas: 1
+      restart_policy:
+         condition: on-failure
+      placement:
+         constraints:
+         - node.role == manager
+    volumes:
+     - certificado:/etc/letsencrypt
+     - ssl:/var/lib/letsencrypt
+     - web:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email tetrix@riseup.net --agree-tos --no-eff-email --force-renewal --staging -d swarm.pytrix.me -d www.swarm.pytrix.me
+     
 volumes:
   certificado:
   ssl:
   web:
   rpi-mysql:
   nginx:
+  database:
 
 networks:
   reddocker:
     driver: overlay
-          #reddb:
-          #driver: bridge
+    #reddb:
+    #driver: overlay
