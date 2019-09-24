@@ -1,10 +1,10 @@
 # Docker Secret 
 
-Hay varias formas de utilizar variables de entornos para contedores docker, una opción es escribir la variable dentros de los archivo compose,otra opción es utilizando un *env_file* pero esta opciones no son seguras. 
+Hay varias formas de utilizar variables de entornos para contenedores docker, una opción es escribir la variable directamente en los archivo compose, otra opción es utilizando un *env_file* pero estas opciones no son seguras. 
 
-Existe una forma de gestionar estas varibles de forma más segura utilizando los secretos de docker. En muchos casos es importante tener el código y los archivos de configuracón de forma pública y contar con un mecanmos seguro para almacenar password u otros tipos de datos sensibles.
+En muchos casos es importante tener el código y los archivos de configuración de forma publica y contar con un mecanimo seguro de almacenamiento de contraseñas u otros datos sensibles, por dicha, docker tiene un mecanimos que se llama docker secrets para gestionar varibles de entorno de forma más segura. 
 
-Los secretos son declarados en archivo de docker compose y automaticamente en todos los nodos:
+Los secretos se definen en el archivo de docker compose y automaticamente en todos los nodos:
 
 ### Crear secretos 
 
