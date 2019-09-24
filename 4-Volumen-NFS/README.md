@@ -10,14 +10,14 @@ Crear un directorio para NFS home
 
 `$ mkdir /nfs_data`
 
-`$ docker run --rm -itd --name nfs \
-  --privileged \
-  -v /nfs_data:/nfs.1 \
-  -e SHARED_DIRECTORY=/nfs.1 \
-  -p 10.158.0.42:2049:2049 \
-  itsthenetwork/nfs-server-alpine:latest`
+    $ docker run --rm -itd --name nfs \
+      --privileged \
+      -v /nfs_data:/nfs.1 \
+      -e SHARED_DIRECTORY=/nfs.1 \
+      -p 10.158.0.42:2049:2049 \
+      itsthenetwork/nfs-server-alpine:latest
 
-https://hub.docker.com/r/itsthenetwork/nfs-server-alpine/
+[más infor](https://hub.docker.com/r/itsthenetwork/nfs-server-alpine/)
 
 Esta imangen está creada con Alpine Linux y NFS v4 a través de TCP en el puerto 2049
 
@@ -30,7 +30,8 @@ Esta imangen está creada con Alpine Linux y NFS v4 a través de TCP en el puert
 
 ### en los otros nodos
 
-Instalar 
+Instalar
+
 `$ sudo apt -y install nfs-common`
 
 montar partición
