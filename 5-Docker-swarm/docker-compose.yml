@@ -1,0 +1,15 @@
+version: '3.1'
+services:
+ htpps:
+    image: certbot/certbot
+    volumes:
+     - certificado:/etc/letsencrypt
+     - ssl:/var/lib/letsencrypt
+     - /home/web:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email tetrix@riseup.net --agree-tos --no-eff-email --force-renewal --staging -d swarm.pytrix.me -d www.swarm.pytrix.me
+
+volumes:
+  certificado:
+  ssl:
+  nginx:
+
